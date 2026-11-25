@@ -14,17 +14,21 @@ const ENTRY_LINE =
   "lid down. the last thing you typed was 'i'll finish this tomorrow' and my screen is dark now.";
 
 // Gate: the entry must be 1–200 characters, a single line, not only whitespace.
-if (ENTRY_LINE.length < 1 || ENTRY_LINE.length > 200) {
-  throw new Error(
-    `entry line must be 1–200 characters, got ${ENTRY_LINE.length}`,
-  );
+function validateEntry(line: string): void {
+  if (line.length < 1 || line.length > 200) {
+    throw new Error(
+      `entry line must be 1–200 characters, got ${line.length}`,
+    );
+  }
+  if (line.includes("\n") || line.includes("\r")) {
+    throw new Error("entry line must be a single line");
+  }
+  if (line.trim().length === 0) {
+    throw new Error("entry line must not be only whitespace");
+  }
 }
-if (ENTRY_LINE.includes("\n") || ENTRY_LINE.includes("\r")) {
-  throw new Error("entry line must be a single line");
-}
-if (ENTRY_LINE.trim().length === 0) {
-  throw new Error("entry line must not be only whitespace");
-}
+
+validateEntry(ENTRY_LINE);
 
 const outPath = join("/output", "entry.txt");
 mkdirSync(dirname(outPath), { recursive: true });
